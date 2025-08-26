@@ -10,11 +10,12 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder(toBuilder = true)
-public class Loan {
+public class LoanRequest {
     private Long id;
     private LoanAmount amount;
     private LoanTerm loanTerm;
     private Email email;
     private LoanRequestStatus status;
     private LoanType loanType;
+    private Long customerId;
 }
