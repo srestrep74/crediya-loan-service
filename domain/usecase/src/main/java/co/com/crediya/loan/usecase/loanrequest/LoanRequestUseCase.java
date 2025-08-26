@@ -2,6 +2,12 @@ package co.com.crediya.loan.usecase.loanrequest;
 
 import co.com.crediya.loan.model.LoanRequest;
 import co.com.crediya.loan.model.LoanRequestStatus;
+import co.com.crediya.loan.model.exception.LoanTypeNotFoundException;
+import co.com.crediya.loan.model.exception.UserNotFoundException;
+import co.com.crediya.loan.model.gateways.LoanRequestReactivePersistenceGateway;
+import co.com.crediya.loan.model.gateways.LoanTypeReactivePersistenceGateway;
+import co.com.crediya.loan.model.gateways.TransactionGateway;
+import co.com.crediya.loan.model.gateways.UserServiceGateway;
 import lombok.RequiredArgsConstructor;
 import reactor.core.publisher.Mono;
 
@@ -15,17 +21,35 @@ public class LoanRequestUseCase {
 
     public Mono<LoanRequest> saveLoanRequest(LoanRequest loanRequest) {
         return transactionGateway.execute(
-                userServiceGateway.findById(loanRequest.getCustomerId())
-                        .switchIfEmpty(Mono.error(new UserNotFoundException("")))
-                        .then(loanTypeReactivePersistenceGateway.findById(loanRequest.getLoanType().getId())
-                                .switchIfEmpty(Mono.error(new LoanTypeNotFoundException(""))))
+                this.validateUserExists(loanRequest.getCustomerId())
+                        .then(this.validateLoanTypeExists(loanRequest.getLoanType().getId()))
                         .then(Mono.defer(() -> {
                             LoanRequest requestToSave = loanRequest.toBuilder()
                                     .status(LoanRequestStatus.PENDING_REVIEW)
                                     .build();
                             return loanRequestReactivePersistenceGateway.save(requestToSave);
                         }))
-        )
+        );
+    }
+
+    private Mono<Void> validateUserExists(Long userId) {
+        return userServiceGateway.existsById(userId)
+                .flatMap(exists -> {
+                    if (!exists) {
+                        return Mono.error(new UserNotFoundException("User with id " + userId + " not found"));
+                    }
+                    return Mono.empty();
+                });
+    }
+
+    private Mono<Void> validateLoanTypeExists(Long loanTypeId) {
+        return loanTypeReactivePersistenceGateway.existsById(loanTypeId)
+                .flatMap(exists -> {
+                    if (!exists) {
+                        return Mono.error(new LoanTypeNotFoundException("LoanType with id " + loanTypeId + " not found"));
+                    }
+                    return Mono.empty();
+                });
     }
 
 }
