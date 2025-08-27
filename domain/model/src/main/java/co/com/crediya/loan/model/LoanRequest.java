@@ -6,7 +6,6 @@ import co.com.crediya.loan.model.valueobjects.LoanTerm;
 import lombok.*;
 
 @Getter
-@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder(toBuilder = true)
@@ -18,4 +17,17 @@ public class LoanRequest {
     private LoanRequestStatus status;
     private LoanType loanType;
     private Long customerId;
+
+    @Override
+    public String toString() {
+        return "LoanRequest{" +
+                "id=" + id +
+                ", amount=" + amount +
+                ", loanTerm=" + loanTerm +
+                ", email=" + email +
+                ", status=" + status +
+                ", loanType=" + (loanType != null ? loanType.getName() : "null") +
+                ", customerId=" + customerId +
+                '}';
+    }
 }

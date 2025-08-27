@@ -1,4 +1,4 @@
-package co.com.crediya.loan.r2dbc.adapters.loan;
+package co.com.crediya.loan.r2dbc.adapters.loanrequest;
 
 import co.com.crediya.loan.r2dbc.entity.LoanRequestEntity;
 import org.springframework.data.repository.query.ReactiveQueryByExampleExecutor;

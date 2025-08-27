@@ -20,16 +20,24 @@ public class LoanRequestUseCase {
     private final UserServiceGateway userServiceGateway;
 
     public Mono<LoanRequest> saveLoanRequest(LoanRequest loanRequest) {
-        return transactionGateway.execute(
-                this.validateUserExists(loanRequest.getCustomerId())
-                        .then(this.validateLoanTypeExists(loanRequest.getLoanType().getId()))
-                        .then(Mono.defer(() -> {
-                            LoanRequest requestToSave = loanRequest.toBuilder()
-                                    .status(LoanRequestStatus.PENDING_REVIEW)
-                                    .build();
-                            return loanRequestReactivePersistenceGateway.save(requestToSave);
-                        }))
-        );
+        return Mono.defer(() -> {
+            if (loanRequest.getLoanType() == null) {
+                return Mono.error(new LoanTypeNotFoundException("LoanType is null"));
+            }
+            return transactionGateway.execute(
+                    this.validateUserExists(loanRequest.getCustomerId())
+                            .then(this.validateLoanTypeExists(loanRequest.getLoanType().getId()))
+                            .then(Mono.defer(() -> {
+                                LoanRequest requestToSave = loanRequest.toBuilder()
+                                        .status(LoanRequestStatus.PENDING_REVIEW)
+                                        .build();
+                                return loanRequestReactivePersistenceGateway.save(requestToSave);
+                            }))
+                            .map(savedRequest -> savedRequest.toBuilder()
+                                    .loanType(loanRequest.getLoanType())
+                                    .build())
+            );
+        });
     }
 
     private Mono<Void> validateUserExists(Long userId) {

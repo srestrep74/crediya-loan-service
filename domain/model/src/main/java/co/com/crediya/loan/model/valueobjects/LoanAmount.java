@@ -27,6 +27,7 @@ public class LoanAmount {
         return value;
     }
 
+    @Override
     public boolean equals(Object obj) {
         if (this == obj) return true;
         if (obj == null || getClass() != obj.getClass()) return false;
@@ -37,6 +38,11 @@ public class LoanAmount {
     @Override
     public int hashCode() {
         return value.hashCode();
+    }
+
+    @Override
+    public String toString() {
+        return "LoanAmount{" + value + "}";
     }
 
 }

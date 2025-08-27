@@ -1,4 +1,4 @@
-package co.com.crediya.loan.r2dbc.adapters.loan;
+package co.com.crediya.loan.r2dbc.adapters.loanrequest;
 
 import co.com.crediya.loan.model.LoanRequest;
 import co.com.crediya.loan.model.gateways.LoanRequestReactivePersistenceGateway;
@@ -24,5 +24,15 @@ public class R2dbcLoanRequestReactivePersistenceAdapter extends ReactiveAdapterO
     @Override
     public Mono<LoanRequest> save(LoanRequest loanRequest) {
         return super.save(loanRequest);
+    }
+
+    @Override
+    public LoanRequestEntity toData(LoanRequest loanRequest) {
+        return loanRequestMapper.toData(loanRequest);
+    }
+
+    @Override
+    public LoanRequest toEntity(LoanRequestEntity loanRequestEntity) {
+        return loanRequestMapper.toEntity(loanRequestEntity);
     }
 }

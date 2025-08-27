@@ -38,4 +38,9 @@ public class LoanTerm {
     public int hashCode() {
         return months.hashCode();
     }
+
+    @Override
+    public String toString() {
+        return "LoanTerm{" + months + " months}";
+    }
 }

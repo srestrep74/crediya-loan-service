@@ -8,4 +8,5 @@ import java.util.Optional;
 public interface LoanTypeReactivePersistenceGateway {
     Mono<LoanType> save(LoanType loanType);
     Mono<Boolean> existsById(Long id);
+    Mono<LoanType> findById(Long id);
 }

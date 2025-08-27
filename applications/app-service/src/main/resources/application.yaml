@@ -7,11 +7,11 @@ spring:
     add-properties: false
   sql:
     init:
-      mode: always
-      schema-locations: classpath:/migrations/schema.sql
-      data-locations: classpath:/migrations/data.sql
+      mode: "always"
+      schema-locations: "classpath:/migrations/schema.sql"
+      data-locations: "classpath:/migrations/data.sql"
   profiles:
-    include:
+    include: null
 management:
   endpoints:
     web:
@@ -21,12 +21,32 @@ management:
     health:
       probes:
         enabled: true
-
+  health:
+    circuitbreakers:
+      enabled: true
 adapters:
   r2dbc:
-    host: localhost
+    host: "localhost"
     port: 5432
-    database: loan-db
-    schema: public
-    username: admin
-    password: admin
+    database: "loan-db"
+    schema: "public"
+    username: "admin"
+    password: "admin"
+cors:
+  allowed-origins: "http://localhost:4200,http://localhost:8080"
+adapter:
+  restconsumer:
+    timeout: 5000
+    url: "http://localhost:8080"
+resilience4j:
+  circuitbreaker:
+    instances:
+      userServiceExistsById:
+        registerHealthIndicator: true
+        failureRateThreshold: 50
+        slowCallRateThreshold: 50
+        slowCallDurationThreshold: "2s"
+        permittedNumberOfCallsInHalfOpenState: 3
+        slidingWindowSize: 10
+        minimumNumberOfCalls: 10
+        waitDurationInOpenState: "10s"
