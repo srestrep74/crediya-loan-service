@@ -7,7 +7,7 @@ import lombok.RequiredArgsConstructor;
 import reactor.core.publisher.Mono;
 
 @RequiredArgsConstructor
-public class LoantypeUseCase {
+public class LoanTypeUseCase {
 
     private final LoanTypeReactivePersistenceGateway loanTypeReactivePersistenceGateway;
 

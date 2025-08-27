@@ -3,7 +3,7 @@ package co.com.crediya.loan.api.handler.v1;
 import co.com.crediya.loan.api.dto.v1.CreateLoanRequest;
 import co.com.crediya.loan.api.mapper.CreateLoanRequestMapper;
 import co.com.crediya.loan.usecase.loanrequest.LoanRequestUseCase;
-import co.com.crediya.loan.usecase.loantype.LoantypeUseCase;
+import co.com.crediya.loan.usecase.loantype.LoanTypeUseCase;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -17,7 +17,7 @@ import reactor.core.publisher.Mono;
 public class LoanRequestHandler {
 
     private final LoanRequestUseCase loanRequestUseCase;
-    private final LoantypeUseCase loantypeUseCase;
+    private final LoanTypeUseCase loantypeUseCase;
 
     public Mono<ServerResponse> listenSaveLoan(ServerRequest serverRequest) {
         return serverRequest
